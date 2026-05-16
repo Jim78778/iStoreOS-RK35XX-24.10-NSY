@@ -125,7 +125,7 @@ jobs:
     - name: Add QModem feed
       run: echo 'src-git qmodem https://github.com/FUjr/QModem.git;main' >> feeds.conf.default
            ./scripts/feeds update qmodem
-           ./scripts/feeds install -a -p qmodem
+           ./scripts/feeds install -a -p -f qmodem
     
     - name: 加载自定义配置
       env:
