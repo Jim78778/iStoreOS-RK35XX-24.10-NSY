@@ -141,7 +141,7 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
-     - name: 固定单设备配置
+    - name: 固定单设备配置
       run: |
         cd openwrt
 
