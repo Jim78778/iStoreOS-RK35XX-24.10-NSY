@@ -141,42 +141,9 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
-    - name: 固定单设备配置
+    - name: 检验
       run: |
         cd openwrt
-
-        # 清理所有 profile
-        sed -i '/CONFIG_TARGET.*DEVICE_.*/d' .config
-        sed -i '/CONFIG_TARGET_MULTI_PROFILE/d' .config
-
-        # 强制单 profile
-        echo 'CONFIG_TARGET_MULTI_PROFILE=n' >> .config
-
-        # 固定 target
-        echo 'CONFIG_TARGET_rockchip=y' >> .config
-        echo 'CONFIG_TARGET_rockchip_armv8=y' >> .config
-
-        # 固定设备
-        echo 'CONFIG_TARGET_rockchip_armv8_DEVICE_nsy_g16_plus=y' >> .config
-
-        # QModem
-        echo 'CONFIG_PACKAGE_qmodem=y' >> .config
-        echo 'CONFIG_PACKAGE_luci-app-qmodem-next=y' >> .config
-
-        # 依赖
-        echo 'CONFIG_PACKAGE_kmod-usb-net-qmi-wwan=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-usb-wdm=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-usb-serial-option=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-usb-serial-wwan=y' >> .config
-        echo 'CONFIG_PACKAGE_uqmi=y' >> .config
-        echo 'CONFIG_PACKAGE_libqmi=y' >> .config
-        echo 'CONFIG_PACKAGE_usb-modeswitch=y' >> .config
-
-        # 中文
-        echo 'CONFIG_PACKAGE_luci-i18n-qmodem-next-zh-cn=y' >> .config
-
-        # 重新生成
-        make defconfig
 
         echo '================ TARGET CHECK ================'
         grep '^CONFIG_TARGET' .config
