@@ -124,6 +124,7 @@ jobs:
     
     - name: Add QModem feed
       run: echo 'src-git qmodem https://github.com/FUjr/QModem.git;main' >> feeds.conf.default
+           cd openwrt
            ./scripts/feeds update qmodem
            ./scripts/feeds install -a -p -f qmodem
     
@@ -137,13 +138,16 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
-    # - name: SSH 连接到 Actions
-      # uses: P3TERX/ssh2actions@main
-      # if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      # env:
-        # TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        # TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
+    - name: 固定单设备配置
+      run: |
+        cd openwrt
+           sed -i '/CONFIG_TARGET_MULTI_PROFILE/d' .config
+           echo 'CONFIG_TARGET_MULTI_PROFILE=n' >> .config
+           sed -i '/CONFIG_TARGET_rockchip_armv8_DEVICE_/d' .config
+           echo 'CONFIG_TARGET_rockchip_armv8_DEVICE_nsy_g16_plus=y' >> .config
+           echo 'CONFIG_PACKAGE_luci-app-qmodem=y' >> .config
+           echo 'CONFIG_PACKAGE_qmodem=y' >> .config
+         make defconfig
     - name: 下载软件包
       id: package
       run: |
@@ -168,7 +172,7 @@ jobs:
 
     - name: 上传 bin 文件夹
       uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'false'
       with:
         name: OpenWrt_bin${{ env.FILE_DATE }}
         path: openwrt/bin
