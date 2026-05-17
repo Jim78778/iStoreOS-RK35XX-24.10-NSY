@@ -145,7 +145,7 @@ jobs:
            echo 'CONFIG_TARGET_MULTI_PROFILE=n' >> .config
            sed -i '/CONFIG_TARGET_rockchip_armv8_DEVICE_/d' .config
            echo 'CONFIG_TARGET_rockchip_armv8_DEVICE_nsy_g16_plus=y' >> .config
-           echo 'CONFIG_PACKAGE_luci-app-qmodem=y' >> .config
+           echo 'CONFIG_PACKAGE_luci-app-qmodem-next=y' >> .config
            echo 'CONFIG_PACKAGE_qmodem=y' >> .config
          make defconfig
     - name: 下载软件包
