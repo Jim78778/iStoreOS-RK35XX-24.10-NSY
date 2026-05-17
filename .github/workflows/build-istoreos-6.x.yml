@@ -122,11 +122,14 @@ jobs:
     - name: 安装 feeds
       run: cd openwrt && ./scripts/feeds install -a
     
-    - name: Add QModem feed
-      run: echo 'src-git qmodem https://github.com/FUjr/QModem.git;main' >> feeds.conf.default
-           cd openwrt
-           ./scripts/feeds update qmodem
-           ./scripts/feeds install -a -p -f qmodem
+    - name: Add QModem Feed
+      run: |
+        cd openwrt
+
+        echo 'src-git qmodem https://github.com/FUjr/QModem.git;main' >> feeds.conf.default
+
+        ./scripts/feeds update qmodem
+        ./scripts/feeds install -a -f -p qmodem
     
     - name: 加载自定义配置
       env:
@@ -141,13 +144,37 @@ jobs:
     - name: 固定单设备配置
       run: |
         cd openwrt
-           sed -i '/CONFIG_TARGET_MULTI_PROFILE/d' .config
-           echo 'CONFIG_TARGET_MULTI_PROFILE=n' >> .config
-           sed -i '/CONFIG_TARGET_rockchip_armv8_DEVICE_/d' .config
-           echo 'CONFIG_TARGET_rockchip_armv8_DEVICE_nsy_g16_plus=y' >> .config
-           echo 'CONFIG_PACKAGE_luci-app-qmodem-next=y' >> .config
-           echo 'CONFIG_PACKAGE_qmodem=y' >> .config
-         make defconfig
+
+        # 禁用多设备
+        sed -i '/CONFIG_TARGET_MULTI_PROFILE/d' .config
+        echo 'CONFIG_TARGET_MULTI_PROFILE=n' >> .config
+
+        # 固定设备
+        sed -i '/CONFIG_TARGET_rockchip_armv8_DEVICE_/d' .config
+        echo 'CONFIG_TARGET_rockchip_armv8_DEVICE_nsy_g16_plus=y' >> .config
+
+        # QModem
+        echo 'CONFIG_PACKAGE_qmodem=y' >> .config
+        echo 'CONFIG_PACKAGE_luci-app-qmodem-next=y' >> .config
+
+        # USB Modem 依赖
+        echo 'CONFIG_PACKAGE_kmod-usb-net-qmi-wwan=y' >> .config
+        echo 'CONFIG_PACKAGE_kmod-usb-wdm=y' >> .config
+        echo 'CONFIG_PACKAGE_kmod-usb-serial-option=y' >> .config
+        echo 'CONFIG_PACKAGE_kmod-usb-serial-wwan=y' >> .config
+        echo 'CONFIG_PACKAGE_uqmi=y' >> .config
+        echo 'CONFIG_PACKAGE_libqmi=y' >> .config
+        echo 'CONFIG_PACKAGE_usb-modeswitch=y' >> .config
+
+        # 可选
+        echo 'CONFIG_PACKAGE_luci-i18n-qmodem-next-zh-cn=y' >> .config
+
+        make defconfig
+
+        echo '================ QMODEM CHECK ================'
+        grep qmodem .config || true
+        grep QMODEM .config || true
+    
     - name: 下载软件包
       id: package
       run: |
