@@ -140,7 +140,10 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-
+    - name: Fix .config format
+      run: |
+         sed -i 's/^CONFIG_\(.*\) is not set$/# CONFIG_\1 is not set/' openwrt/.config
+         working-directory: openwrt
     - name: 检验
       run: |
         cd openwrt
