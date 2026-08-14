@@ -68,3 +68,12 @@ echo 'src-git mosdns https://github.com/sbwml/luci-app-mosdns' >> feeds.conf.def
 # 添加 passwall 的软件源 (包含其依赖库和界面)
 echo 'src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' >> feeds.conf.default
 echo 'src-git passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main' >> feeds.conf.default
+
+# 删除自带包并克隆最新源码
+find ./ -name Makefile | grep -E "v2ray-geodata|mosdns" | xargs rm -f
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+
+# 如果你还需要 passwall 源码（不通过 feeds 添加，直接克隆到 package）
+git clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/passwall_packages
+git clone https://github.com/Openwrt-Passwall/openwrt-passwall.git package/passwall_luci
