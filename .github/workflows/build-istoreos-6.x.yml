@@ -135,7 +135,7 @@ jobs:
     - name: Fix .config format
       run: |
          sed -i 's/^CONFIG_\(.*\) is not set$/# CONFIG_\1 is not set/' openwrt/.config
-         working-directory: openwrt
+      working-directory: openwrt
     
     - name: 下载软件包
       id: package
