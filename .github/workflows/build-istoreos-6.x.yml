@@ -8,9 +8,12 @@ on:
         # description: 'SSH connection to Actions'
         # required: false
         # default: 'false'
-  schedule:
-   - cron: 0 16 * * *
+ 
 
+  concurrency:
+    group: build-istoreos-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+  
 env:
   REPO_URL: https://github.com/istoreos/istoreos
   # REPO_BRANCH: main
