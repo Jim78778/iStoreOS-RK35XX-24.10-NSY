@@ -69,6 +69,10 @@ echo 'src-git mosdns https://github.com/sbwml/luci-app-mosdns' >> feeds.conf.def
 echo 'src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' >> feeds.conf.default
 echo 'src-git passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main' >> feeds.conf.default
 
+# 移除官方 golang 依赖，使用 sbwml 定制的 26.x 版本 (对应 iStoreOS 24.10)
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+
 # 删除自带包并克隆最新源码
 find ./ -name Makefile | grep -E "v2ray-geodata|mosdns" | xargs rm -f
 git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
