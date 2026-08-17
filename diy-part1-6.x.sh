@@ -81,3 +81,16 @@ git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 # 如果你还需要 passwall 源码（不通过 feeds 添加，直接克隆到 package）
 git clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/passwall_packages
 git clone https://github.com/Openwrt-Passwall/openwrt-passwall.git package/passwall_luci
+# =================================================================
+# 解决 mosdns v5 要求 go >= 1.25.0 的问题 (强制在 PATH 中使用高版本 Go)
+# =================================================================
+# 下载 Go 1.25 (ARM64 版本，匹配你的 RK35XX 构建设置)
+wget -q https://go.dev/dl/go1.25.3.linux-arm64.tar.gz
+# 清理旧的 Go 环境，并解压到 OpenWrt 的 host 目录下，避免污染系统环境
+rm -rf /home/runner/work/iStoreOS-RK35XX-24.10-NSY/iStoreOS-RK35XX-24.10-NSY/workdir/openwrt/staging_dir/host/go
+mkdir -p /home/runner/work/iStoreOS-RK35XX-24.10-NSY/iStoreOS-RK35XX-24.10-NSY/workdir/openwrt/staging_dir/host/go
+tar -C /home/runner/work/iStoreOS-RK35XX-24.10-NSY/iStoreOS-RK35XX-24.10-NSY/workdir/openwrt/staging_dir/host/go -xzf go1.25.3.linux-arm64.tar.gz --strip-components=1
+# 将这个新版本的 Go 加到 PATH 最前面，确保后续编译 mosdns 时优先使用它
+export PATH=/home/runner/work/iStoreOS-RK35XX-24.10-NSY/iStoreOS-RK35XX-24.10-NSY/workdir/openwrt/staging_dir/host/go/bin:$PATH
+go version
+# =================================================================
