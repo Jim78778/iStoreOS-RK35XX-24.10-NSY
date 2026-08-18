@@ -60,6 +60,28 @@ cp -f $GITHUB_WORKSPACE/configfiles/WirelessDriver/mt7916_eeprom_backup.bin pack
 cp -f $GITHUB_WORKSPACE/configfiles/opwifi package/base-files/files/etc/init.d/opwifi
 chmod 755 package/base-files/files/etc/init.d/opwifi
 
+#!/bin/bash
+
+# =================================================================
+# 替换 Golang (必须在 feeds update 之后执行)
+# =================================================================
+echo "========================================"
+echo "替换 Golang 为 sbwml 26.x"
+echo "========================================"
+
+# 删除被 feeds update 覆盖的旧 Golang 目录
+rm -rf feeds/packages/lang/golang
+
+# 克隆新的 Golang 配置
+git clone --depth=1 -b 26.x https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang
+
+# =================================================================
+# v2ray-geodata (确保 package 目录存在)
+# =================================================================
+mkdir -p package
+rm -rf package/v2ray-geodata
+git clone --depth=1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+
 
 # 电工大佬的rtl8367b驱动资源包，暂时使用这样替换
 wget https://github.com/xiaomeng9597/files/releases/download/files/rtl8367b.tar.gz
