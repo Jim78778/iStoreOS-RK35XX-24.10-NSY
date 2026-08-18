@@ -33,57 +33,19 @@ sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V ${date_version} by ${
 sed -i "s/OPENWRT_RELEASE.*/OPENWRT_RELEASE=\"%D %V ${date_version} by ${author}\"/g" \
     package/base-files/files/usr/lib/os-release
 
+#!/bin/bash
+
 # =================================================================
 # 添加 mosdns feed
 # =================================================================
-
-echo 'src-git mosdns https://github.com/sbwml/luci-app-mosdns' \
-    >> feeds.conf.default
+echo 'src-git mosdns https://github.com/sbwml/luci-app-mosdns' >> feeds.conf.default
 
 # =================================================================
 # 添加 Passwall feeds
 # =================================================================
-
-echo 'src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' \
-    >> feeds.conf.default
-
-echo 'src-git passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main' \
-    >> feeds.conf.default
-
-# =================================================================
-# 替换 Golang
-# =================================================================
+echo 'src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' >> feeds.conf.default
+echo 'src-git passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main' >> feeds.conf.default
 
 echo "========================================"
-echo "替换 Golang 为 sbwml 26.x"
-echo "========================================"
-
-rm -rf feeds/packages/lang/golang
-
-git clone --depth=1 \
-    -b 26.x \
-    https://github.com/sbwml/packages_lang_golang \
-    feeds/packages/lang/golang
-
-# =================================================================
-# 删除旧 mosdns / v2ray-geodata
-# =================================================================
-
-rm -rf package/mosdns
-rm -rf package/v2ray-geodata
-
-find ./ -name Makefile \
-    | grep -E "v2ray-geodata|mosdns" \
-    | xargs -r rm -f
-
-# =================================================================
-# v2ray-geodata
-# =================================================================
-
-git clone --depth=1 \
-    https://github.com/sbwml/v2ray-geodata \
-    package/v2ray-geodata
-
-echo "========================================"
-echo "DIY Part 1 完成"
+echo "DIY Part 1 完成（仅修改 feeds.conf）"
 echo "========================================"
