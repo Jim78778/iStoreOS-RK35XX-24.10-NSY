@@ -23,12 +23,6 @@ author="Gota666"
 sed -i "s/DISTRIB_DESCRIPTION.*/DISTRIB_DESCRIPTION='%D %V ${date_version} by ${author}'/g" package/base-files/files/etc/openwrt_release
 sed -i "s/OPENWRT_RELEASE.*/OPENWRT_RELEASE=\"%D %V ${date_version} by ${author}\"/g" package/base-files/files/usr/lib/os-release
 
-# 添加 mosdns 的软件源
-echo 'src-git mosdns https://github.com/sbwml/luci-app-mosdns' >> feeds.conf.default
-
-# 添加 passwall 的软件源 (包含其依赖库和界面)
-echo 'src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' >> feeds.conf.default
-echo 'src-git passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main' >> feeds.conf.default
 
 # 移除官方 golang 依赖，使用 sbwml 定制的 26.x 版本 (对应 iStoreOS 24.10)
 rm -rf feeds/packages/lang/golang
