@@ -37,7 +37,7 @@ jobs:
         ARCHITECTURE:
           - armv8
         os:
-          - ubuntu-22.04
+          - ubuntu-latest
 
       fail-fast: false
 
