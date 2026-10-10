@@ -49,3 +49,12 @@ echo 'src-git passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall
 echo "========================================"
 echo "DIY Part 1 完成（仅修改 feeds.conf）"
 echo "========================================"
+
+# =================================================================
+# 添加 5G Modem 管理界面 feed (fildunsky/luci-app-5gmodem)
+# =================================================================
+echo 'src-git 5gmodem https://github.com/fildunsky/luci-app-5gmodem' >> feeds.conf.default
+
+echo "========================================"
+echo "DIY Part 1 完成（feeds: mosdns + passwall + 5gmodem）"
+echo "========================================"

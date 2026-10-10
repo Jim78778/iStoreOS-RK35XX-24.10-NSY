@@ -32,7 +32,7 @@ jobs:
       matrix:
         REPO_BRANCH:
           # - main
-          - istoreos-24.10
+          - istoreos-25.12
           # - istoreos-23.05
         ARCHITECTURE:
           - armv8
