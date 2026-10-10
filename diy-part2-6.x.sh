@@ -19,7 +19,9 @@ cp -a $GITHUB_WORKSPACE/configfiles/etc/* package/base-files/files/etc/
 
 # 追加自定义内核配置项
 echo "CONFIG_PSI=y
-CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.12
+CONFIG_KPROBES=y
+CONFIG_SND_UMP=m
+CONFIG_SND_SEQ_UMP=m" >> target/linux/rockchip/armv8/config-6.12
 
 
 # 集成CPU性能跑分脚本
