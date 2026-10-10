@@ -301,7 +301,7 @@ define KernelPackage/mt_wifi/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7916/rebb/7916_WACPU_RAM_CODE_release.bin $(1)/lib/firmware/;
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7916/rebb/mt7916_patch_e1_hdr.bin $(1)/lib/firmware/;
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7916/rebb/WIFI_RAM_CODE_MT7916.bin $(1)/lib/firmware/;
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7916/rebb/MT7916_iPAiLNA_EEPROM.bin $(1)/lib/firmware/e2p;
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/mt7916/rebb/MT7916_EEPROM_AX3000_ePAeLNA_2G_5G_2T2R+1R.bin $(1)/lib/firmware/e2p;
 endef
 
 $(eval $(call KernelPackage,mt_wifi))
