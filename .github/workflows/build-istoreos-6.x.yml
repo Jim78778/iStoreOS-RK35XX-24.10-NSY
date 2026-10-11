@@ -98,7 +98,7 @@ jobs:
       working-directory: ${{ env.WORKDIR_PATH }}/workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b ${{ matrix.REPO_BRANCH }} openwrt
+        git clone --depth 1 --single-branch $REPO_URL -b ${{ matrix.REPO_BRANCH }} openwrt
         ln -sf ${{ env.WORKDIR_PATH }}/workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: 缓存构建动作
@@ -118,7 +118,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: 更新 feeds
-      run: cd openwrt && ./scripts/feeds update -a
+      run: cd openwrt && ./scripts/feeds update -a -j $(nproc)
 
     - name: 安装 feeds
       run: cd openwrt && ./scripts/feeds install -a
@@ -140,17 +140,18 @@ jobs:
         set -e
 
         make defconfig
-        make download -j8
+        make download -j16
 
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
     
     - name: 编译固件
       id: compile
+      timeout-minutes: 360
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        make -j$(nproc) V=s
+        make -j$(nproc) 2>&1 | tee build-full.log
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
         echo "status=success" >> ${GITHUB_OUTPUT}
 
