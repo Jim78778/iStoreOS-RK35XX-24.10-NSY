@@ -21,7 +21,7 @@ cp -a $GITHUB_WORKSPACE/configfiles/etc/* package/base-files/files/etc/
 echo "CONFIG_PSI=y
 CONFIG_KPROBES=y
 CONFIG_SND_UMP=m
-CONFIG_SND_SEQ_UMP=m" >> target/linux/rockchip/armv8/config-6.12
+CONFIG_SND_SEQ_UMP=y" >> target/linux/rockchip/armv8/config-6.12
 
 
 # 集成CPU性能跑分脚本
