@@ -118,7 +118,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: 更新 feeds
-      run: cd openwrt && ./scripts/feeds update -a -j $(nproc)
+      run: cd openwrt && ./scripts/feeds update -a -j4
 
     - name: 安装 feeds
       run: cd openwrt && ./scripts/feeds install -a
@@ -140,7 +140,7 @@ jobs:
         set -e
 
         make defconfig
-        make download -j16
+        make download -j4
 
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
@@ -152,7 +152,7 @@ jobs:
         cd openwrt
         echo -e "$(nproc) thread compile"
         set -o pipefail
-        if make -j$(nproc) 2>&1 | tee build-full.log; then
+        if make -j4 2>&1 | tee build-full.log; then
           echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
           echo "status=success" >> ${GITHUB_OUTPUT}
         else
