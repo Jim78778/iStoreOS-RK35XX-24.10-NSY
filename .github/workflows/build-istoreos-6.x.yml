@@ -151,9 +151,22 @@ jobs:
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        make -j$(nproc) 2>&1 | tee build-full.log
-        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        echo "status=success" >> ${GITHUB_OUTPUT}
+        set -o pipefail
+        if make -j$(nproc) 2>&1 | tee build-full.log; then
+          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+          echo "status=success" >> ${GITHUB_OUTPUT}
+        else
+          echo "status=failure" >> ${GITHUB_OUTPUT}
+          echo "===== 编译失败，重跑失败包获取详细错误 ====="
+          FAILED_PKG=$(grep -m1 'ERROR: package/.* failed' build-full.log | sed 's/.*ERROR: package\///;s/ failed.*//')
+          echo "失败包: ${FAILED_PKG:-未知}"
+          if [ -n "$FAILED_PKG" ]; then
+            make -j1 V=s $FAILED_PKG/compile 2>&1 | tail -200
+          else
+            tail -100 build-full.log
+          fi
+          exit 1
+        fi
 
     - name: 检查磁盘空间
       if: (!cancelled())
