@@ -161,12 +161,20 @@ jobs:
           FAILED_PKG=$(grep -m1 'ERROR: package/.* failed' build-full.log | sed 's/.*ERROR: package\///;s/ failed.*//')
           echo "失败包: ${FAILED_PKG:-未知}"
           if [ -n "$FAILED_PKG" ]; then
-            make -j1 V=s $FAILED_PKG/compile 2>&1 | tail -200
+            make -j1 V=s package/$FAILED_PKG/compile 2>&1 | tail -300
           else
             tail -100 build-full.log
           fi
           exit 1
         fi
+
+    - name: 上传编译日志（失败时）
+      uses: actions/upload-artifact@main
+      if: failure()
+      with:
+        name: build-full.log
+        path: openwrt/build-full.log
+        if-no-files-found: warn
 
     - name: 检查磁盘空间
       if: (!cancelled())
