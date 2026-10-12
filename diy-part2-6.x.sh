@@ -18,9 +18,10 @@ cp -a $GITHUB_WORKSPACE/configfiles/etc/* package/base-files/files/etc/
 
 
 # 追加自定义内核配置项
+# CONFIG_SND_UMP=m: 生成 snd-ump.ko 模块文件（kmod-sound-midi2 打包需要 .ko；=y 内置不会生成 .ko 导致构建失败）
 echo "CONFIG_PSI=y
 CONFIG_KPROBES=y
-CONFIG_SND_UMP=y
+CONFIG_SND_UMP=m
 CONFIG_SND_SEQ_UMP=y" >> target/linux/rockchip/armv8/config-6.12
 
 
@@ -61,35 +62,3 @@ cp -f $GITHUB_WORKSPACE/configfiles/WirelessDriver/mt7916_eeprom.bin package/bas
 cp -f $GITHUB_WORKSPACE/configfiles/WirelessDriver/mt7916_eeprom_backup.bin package/base-files/files/lib/firmware/mediatek/mt7916_eeprom_backup.bin
 cp -f $GITHUB_WORKSPACE/configfiles/opwifi package/base-files/files/etc/init.d/opwifi
 chmod 755 package/base-files/files/etc/init.d/opwifi
-
-#!/bin/bash
-
-# =================================================================
-# 替换 Golang (必须在 feeds update 之后执行)
-# =================================================================
-echo "========================================"
-echo "替换 Golang 为 sbwml 26.x"
-echo "========================================"
-
-# 删除被 feeds update 覆盖的旧 Golang 目录
-rm -rf feeds/packages/lang/golang
-
-# 克隆新的 Golang 配置
-git clone --depth=1 -b 26.x https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang
-
-# =================================================================
-# v2ray-geodata (确保 package 目录存在)
-# =================================================================
-mkdir -p package
-rm -rf package/v2ray-geodata
-git clone --depth=1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-
-
-# 电工大佬的rtl8367b驱动资源包，暂时使用这样替换
-wget https://github.com/xiaomeng9597/files/releases/download/files/rtl8367b.tar.gz
-tar -xvf rtl8367b.tar.gz
-
-
-# 复制dts设备树文件到指定目录下
-cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3568/* target/linux/rockchip/dts/rk3568/
-cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3588/* target/linux/rockchip/dts/rk3588/
