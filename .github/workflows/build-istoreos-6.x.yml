@@ -108,6 +108,17 @@ jobs:
         mixkey: ${{ matrix.os }}-${{ matrix.ARCHITECTURE }}-${{ matrix.REPO_BRANCH }}
         prefix: ${{ github.workspace }}/openwrt
 
+    - name: 恢复编译缓存
+      uses: actions/cache@v4
+      with:
+        path: |
+          openwrt/build_dir
+          openwrt/staging_dir/target-*
+          openwrt/dl
+        key: openwrt-build-${{ matrix.REPO_BRANCH }}-${{ matrix.ARCHITECTURE }}-${{ hashFiles(format('{0}/.config', matrix.ARCHITECTURE)) }}
+        restore-keys: |
+          openwrt-build-${{ matrix.REPO_BRANCH }}-${{ matrix.ARCHITECTURE }}-
+
     - name: 加载自定义 feeds
       env:
         FEEDS_CONF_PATH: ${{ matrix.ARCHITECTURE }}/${{ env.FEEDS_CONF }}
